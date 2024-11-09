@@ -13,8 +13,11 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
-
+  },
+  {
     ignores: ["dist", "node_modules", "eslint.config.mjs"],
+  },
+  {
     rules: {
       "no-console": "error",
     },
