@@ -1,15 +1,18 @@
 import { Config } from "./config";
 import app from "./app";
-
-console.log(Config.PORT);
+import logger from "./config/logger";
 
 const startServer = () => {
   try {
     app.listen(Config.PORT, () => {
-      console.log(`Server is running on http://localhost:${Config.PORT}`);
+      logger.info(`Server is running on port ${Config.PORT}`, {
+        port: Config.PORT,
+      });
+      logger.error(`This is an error log!`); // this log is consoled because it is an error log
+      logger.debug(`Debugging is enabled!`); // this log is not consoled because we set priority level upto only info in logger transport
     });
   } catch (error) {
-    console.log(error);
+    logger.info(`Error: ${error}`);
     process.exit(1);
   }
 };
