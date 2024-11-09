@@ -1,3 +1,3 @@
-console.log("Hello World");
-console.log("Hello World");
-("some change");
+import { Config } from "./config";
+
+console.log(Config.PORT);
