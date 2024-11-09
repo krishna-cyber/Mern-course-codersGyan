@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "Krishna Tiwari <tiwarikrishna54321@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.9.0"
+  }
 }
