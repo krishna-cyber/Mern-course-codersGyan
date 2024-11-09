@@ -16,7 +16,7 @@ export default tseslint.config(
 
     ignores: ["dist", "node_modules", "eslint.config.mjs"],
     rules: {
-      "no-console": "warn",
+      "no-console": "error",
     },
   }
 );
