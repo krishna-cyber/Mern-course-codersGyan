@@ -5,9 +5,9 @@ import logger from "./config/logger";
 const app = express();
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  // const err = createHttpError(401, "You can't access this route");
+  const err = createHttpError(401, "You can't access this route");
   res.status(200).json({ message: "Hello World" });
-  // next(err);
+  next(err);
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
