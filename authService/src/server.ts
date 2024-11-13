@@ -1,4 +1,4 @@
-import { Config } from "./config";
+import { Config } from "./config/config";
 import app from "./app";
 import logger from "./config/logger";
 
