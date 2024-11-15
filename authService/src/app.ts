@@ -1,13 +1,19 @@
 import "reflect-metadata";
 
 import express, { NextFunction, Request, Response } from "express";
+import morgan from "morgan";
 import createHttpError, { HttpError } from "http-errors";
 import logger from "./config/logger";
 import authRouter from "./router/auth";
+// import "./data-source";
 
 const app = express();
 
 app.use(express.json());
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+app.use(morgan("dev"));
+
+// get connected with database and start the server
 
 // router binding
 app.use("/auth", authRouter);
