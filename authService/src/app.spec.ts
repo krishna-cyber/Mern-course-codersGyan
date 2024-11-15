@@ -9,6 +9,7 @@ describe.skip("App", () => {
   });
 
   it("should return 200", async () => {
+    // @ts-expect-error: Unreachable code error
     const response = await request(app).get("/");
 
     expect(response.status).toBe(200);

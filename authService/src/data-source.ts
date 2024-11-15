@@ -4,7 +4,7 @@ import { User } from "./entity/User";
 import { Config } from "./config/config";
 
 export const AppDataSource = new DataSource({
-  type: Config.DB_TYPE as "postgres",
+  type: "postgres",
   host: Config.DB_HOST,
   port: Number(Config.DB_PORT) || 5432,
   username: Config.DB_USERNAME,

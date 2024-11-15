@@ -7,6 +7,8 @@ import authRouter from "./router/auth";
 
 const app = express();
 
+app.use(express.json());
+
 // router binding
 app.use("/auth", authRouter);
 

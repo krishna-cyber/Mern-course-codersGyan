@@ -1,8 +1,28 @@
+import { DataSource } from "typeorm";
 import app from "../../app";
 
 import request from "supertest";
+import { AppDataSource } from "../../data-source";
+import truncateAllTables from "../utils/testUtils";
 
 describe("POST /auth/register", () => {
+  //get connection from the data source
+  let connection: DataSource;
+
+  beforeAll(async () => {
+    connection = await AppDataSource.initialize();
+    console.log("Connection created successfully", connection.isInitialized);
+  });
+
+  beforeEach(() => {
+    //clean up the database database truncate
+    truncateAllTables(connection);
+  });
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
   describe("given all fields", () => {
     it("should return 201 statusCode ", async () => {
       //AAA Pattern (Arrange, Act, Assert)
@@ -16,6 +36,7 @@ describe("POST /auth/register", () => {
       };
 
       // Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
       const response = await request(app).post("/auth/register").send(userData);
 
       // Assert
@@ -33,8 +54,9 @@ describe("POST /auth/register", () => {
       };
 
       // Act
-      const response = await request(app).post("/auth/register").send(userData);
 
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
       // Assert
 
       expect(response.headers["content-type"]).toEqual(
@@ -51,8 +73,15 @@ describe("POST /auth/register", () => {
         password: "123456",
       };
       //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
       await request(app).post("/auth/register").send(userData);
       //Assert
+
+      const user = await connection.getRepository("User").findOne({
+        where: { email: userData.email },
+      });
+
+      expect(user).toHaveLength(1);
     });
   });
 

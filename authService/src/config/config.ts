@@ -1,7 +1,9 @@
 import { config } from "dotenv";
 import path from "path";
-config({ path: path.join(__dirname, `../../env.${process.env.NODE_ENV}`) });
 
+const envPath = path.join(__dirname, `../../.env.${process.env.NODE_ENV}`);
+
+config({ path: envPath });
 const {
   PORT,
   NODE_ENV,
@@ -24,6 +26,6 @@ const Config = {
   DB_NAME,
 };
 
-Object.freeze(Config);
+// Object.freeze(Config);
 
-export { Config };
+export { Config, envPath };
