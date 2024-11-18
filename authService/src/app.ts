@@ -4,7 +4,7 @@ import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import createHttpError, { HttpError } from "http-errors";
 import logger from "./config/logger";
-import authRouter from "./router/auth";
+import authRouter from "./routes/auth";
 // import "./data-source";
 
 const app = express();

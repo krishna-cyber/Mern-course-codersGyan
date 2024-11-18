@@ -81,6 +81,23 @@ describe("POST /auth/register", () => {
 
       expect(user).toHaveLength(1);
     });
+
+    it("should return id of the user", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      //Act and Assert
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const user = await request(app).post("/auth/register").send(userData);
+
+      // Assert  // user must have id
+      expect(user.body).toHaveProperty("result.id");
+    });
   });
 
   describe("missing fields", () => {});

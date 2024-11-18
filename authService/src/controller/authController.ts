@@ -1,31 +1,32 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import { UserData } from "../types/types";
+import UserService from "../services/userService";
 interface RegisterUserRequest extends Request {
   body: UserData;
 }
 class AuthController {
-  async register(req: RegisterUserRequest, res: Response) {
+  userRepository = AppDataSource.getRepository(User);
+  constructor(private userService: UserService) {}
+
+  async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
     const { firstName, lastName, email, password } = req.body;
-    const userRepository = AppDataSource.getRepository(User);
-
-    await userRepository.save({
-      firstName,
-      lastName,
-      email,
-      password,
-    });
-
-    res.status(201).json({
-      message: "User registered successfully",
-    });
+    try {
+      const user = await this.userService.create({
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+      res.status(201).json({
+        result: user,
+        message: "User registered successfully",
+      });
+    } catch (error) {
+      next(error);
+      return;
+    }
   }
 }
 
