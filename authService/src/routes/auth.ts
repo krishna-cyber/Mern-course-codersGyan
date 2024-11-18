@@ -4,13 +4,14 @@ import { Repository } from "typeorm";
 import { User } from "../entity/User";
 import { AppDataSource } from "../data-source";
 import UserService from "../services/userService";
+import logger from "../config/logger";
 
 const authRouter = Router();
 
 const userRepository = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository);
 
-const authController = new AuthController(userService);
+const authController = new AuthController(userService, logger);
 
 authRouter.post(
   "/register",

@@ -3,12 +3,16 @@ import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 import { UserData } from "../types/types";
 import UserService from "../services/userService";
+import { Logger } from "winston";
 interface RegisterUserRequest extends Request {
   body: UserData;
 }
 class AuthController {
   userRepository = AppDataSource.getRepository(User);
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private logger: Logger
+  ) {}
 
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
     const { firstName, lastName, email, password } = req.body;
