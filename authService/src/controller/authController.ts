@@ -23,6 +23,11 @@ class AuthController {
         email,
         password,
       });
+      this.logger.debug(`User registration request`, {
+        firstName,
+        lastName,
+        email,
+      });
       res.status(201).json({
         result: user,
         message: "User registered successfully",
