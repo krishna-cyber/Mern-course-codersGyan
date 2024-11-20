@@ -29,6 +29,16 @@ const logger = winston.createLogger({
       ),
       silent: Config.NODE_ENV === "development",
     }),
+    new winston.transports.File({
+      dirname: "logs",
+      filename: "info.log",
+      level: "info",
+      format: winston.format.combine(
+        winston.format.prettyPrint(),
+        winston.format.timestamp()
+      ),
+      silent: Config.NODE_ENV === "development",
+    }),
 
     //logs upto level of debug and console logs
     new winston.transports.Console({

@@ -4,6 +4,7 @@ import app from "../../app";
 import request from "supertest";
 import { AppDataSource } from "../../data-source";
 import truncateAllTables from "../utils/testUtils";
+import { ROLES } from "../../constants/constants";
 
 describe("POST /auth/register", () => {
   //get connection from the data source
@@ -97,6 +98,21 @@ describe("POST /auth/register", () => {
 
       // Assert  // user must have id
       expect(user.body).toHaveProperty("result.id");
+    });
+
+    it("should assign a customer role to the user", async () => {
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      await request(app).post("/auth/register").send(userData);
+      const user = await connection.getRepository("User").find();
+
+      expect(user[0].role).toBe(ROLES.CUSTOMER);
     });
   });
 

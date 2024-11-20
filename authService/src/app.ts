@@ -7,6 +7,8 @@ import logger from "./config/logger";
 import authRouter from "./routes/auth";
 // import "./data-source";
 
+import "../src/data-source";
+
 const app = express();
 
 app.use(express.json());
@@ -16,7 +18,7 @@ app.use(morgan("dev"));
 // get connected with database and start the server
 
 // router binding
-app.use("/auth", authRouter);
+// app.use("/auth", authRouter);
 
 app.post(
   "/auth/register",
@@ -27,7 +29,6 @@ app.post(
   }
 );
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.message, err.statusCode);
   const statusCode = err.statusCode || 500;
