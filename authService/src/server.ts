@@ -18,4 +18,6 @@ const startServer = () => {
   }
 };
 
-startServer();
+//start server function exported and server will started only if the connection to the database is successful
+//check the data-source.ts file for the connection to the database
+export default startServer;

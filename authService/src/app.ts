@@ -18,16 +18,16 @@ app.use(morgan("dev"));
 // get connected with database and start the server
 
 // router binding
-// app.use("/auth", authRouter);
+app.use("/auth", authRouter);
 
-app.post(
-  "/auth/register",
-  (req: Request, res: Response, next: NextFunction) => {
-    const err = createHttpError(401, "You can't access this route");
-    res.status(200).json({ message: "Hello World" });
-    next(err);
-  }
-);
+// app.post(
+//   "/auth/register",
+//   (req: Request, res: Response, next: NextFunction) => {
+//     const err = createHttpError(401, "You can't access this route");
+//     res.status(200).json({ message: "Hello World" });
+//     next(err);
+//   }
+// );
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.message, err.statusCode);

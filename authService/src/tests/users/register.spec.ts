@@ -1,27 +1,22 @@
-import { DataSource } from "typeorm";
 import app from "../../app";
 
 import request from "supertest";
-import { AppDataSource } from "../../data-source";
-import truncateAllTables from "../utils/testUtils";
+import { closeDatabaseConnection, truncateDatabase } from "../utils/testUtils";
 import { ROLES } from "../../constants/constants";
+import { User } from "../../entity/User";
 
 describe("POST /auth/register", () => {
   //get connection from the data source
-  let connection: DataSource;
+  //before all test cases this function will rul
+  beforeAll(async () => {});
 
-  beforeAll(async () => {
-    connection = await AppDataSource.initialize();
-    console.log("Connection created successfully", connection.isInitialized);
-  });
-
-  beforeEach(() => {
+  beforeEach(async () => {
     //clean up the database database truncate
-    truncateAllTables(connection);
+    await truncateDatabase();
   });
 
   afterAll(async () => {
-    await connection.destroy();
+    await closeDatabaseConnection();
   });
 
   describe("given all fields", () => {
@@ -77,8 +72,8 @@ describe("POST /auth/register", () => {
       //@ts-expect-error: TypeScript does not recognize the app object type
       await request(app).post("/auth/register").send(userData);
       //Assert
-
-      const user = await connection.getRepository("User").find();
+      const user = await User.find();
+      console.log(user);
 
       expect(user).toHaveLength(1);
     });
@@ -97,7 +92,7 @@ describe("POST /auth/register", () => {
       const user = await request(app).post("/auth/register").send(userData);
 
       // Assert  // user must have id
-      expect(user.body).toHaveProperty("result.id");
+      expect(user.body).toHaveProperty("result._id");
     });
 
     it("should assign a customer role to the user", async () => {
@@ -110,8 +105,7 @@ describe("POST /auth/register", () => {
 
       //@ts-expect-error: TypeScript does not recognize the app object type
       await request(app).post("/auth/register").send(userData);
-      const user = await connection.getRepository("User").find();
-
+      const user = await User.find();
       expect(user[0].role).toBe(ROLES.CUSTOMER);
     });
   });

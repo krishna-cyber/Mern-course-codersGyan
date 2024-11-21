@@ -1,14 +1,11 @@
-import { DataSource } from "typeorm";
+import mongoose from "mongoose";
 
-function truncateAllTables(connection: DataSource) {
-  const entities = connection.entityMetadatas; // returns an array of all entities
-
-  // loop through all entities and truncate
-  entities.forEach(async (entity) => {
-    const repository = connection.getRepository(entity.name);
-
-    await repository.clear();
-  });
+async function truncateDatabase() {
+  return await mongoose.connection.db?.dropDatabase();
 }
 
-export default truncateAllTables;
+async function closeDatabaseConnection() {
+  return await mongoose.connection.close();
+}
+
+export { truncateDatabase, closeDatabaseConnection };
