@@ -68,7 +68,7 @@ describe("POST /auth/register", () => {
         email: "tiwarikrishna54321@gmail.com",
         password: "123456",
       };
-      //Act
+
       //@ts-expect-error: TypeScript does not recognize the app object type
       await request(app).post("/auth/register").send(userData);
       //Assert
