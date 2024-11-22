@@ -4,6 +4,7 @@ import { UserData } from "../types/types";
 import UserService from "../services/userService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
+import createHttpError from "http-errors";
 interface RegisterUserRequest extends Request {
   body: UserData;
 }
@@ -14,12 +15,11 @@ class AuthController {
   ) {}
 
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
-    const result = validationResult(req);
-
-    if (!result.isEmpty) {
-      return res.status(400).json({ errors: result.array() });
-    }
     try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        return res.status(400).json({ errors: result.array() });
+      }
       const { firstName, lastName, email, password } = req.body;
       this.logger.debug(`User registration request`, {
         firstName,

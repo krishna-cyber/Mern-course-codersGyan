@@ -115,6 +115,24 @@ describe("POST /auth/register", () => {
       const user = await User.find();
       expect(user[0].role).toBe(ROLES.CUSTOMER);
     });
+
+    it("should return hashed password ", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
+      const user: { body: { result: { password: string } } } = response;
+
+      expect(user.body.result.password).not.toBe(userData.password);
+    });
+
     it("should return 400 status code if user already exists", async () => {
       //Arrange
       const userData = {
@@ -138,7 +156,7 @@ describe("POST /auth/register", () => {
   });
 
   describe("missing fields", () => {
-    it("should return 400 status code if email field is missing", async () => {
+    it("should return 400 status code if email field is missing , user should not be registered", async () => {
       //Arrange
       const userData = {
         firstName: "Krishna",
@@ -150,15 +168,61 @@ describe("POST /auth/register", () => {
       //@ts-expect-error: TypeScript does not recognize the app object type
       const response = await request(app).post("/auth/register").send(userData);
 
-      //Assert
+      const user = await User.find({}); //Assert
       expect(response.statusCode).toBe(400);
+      expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
     });
 
-    it("should return 400 status code if firstName field is missing", async () => {});
+    it("should return 400 status code if firstName field is missing , user should not be registered", async () => {
+      //Arrange
+      const userData = {
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
 
-    it("should return 400 status code if lastName field is missing", async () => {});
+      //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
 
-    it("should return 400 status code if password field is missing", async () => {});
+      const user = await User.find({}); //Assert
+      expect(response.statusCode).toBe(400);
+      expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
+    });
+
+    it("should return 400 status code if lastName field is missing , user should not be registered", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
+
+      const user = await User.find({}); //Assert
+      expect(response.statusCode).toBe(400);
+      expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
+    });
+
+    it("should return 400 status code if password field is missing , user should not be registered", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+      };
+
+      //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
+
+      const user = await User.find({}); //Assert
+      expect(response.statusCode).toBe(400);
+      expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
+    });
   });
 
   describe("if fields are not properly formatted", () => {});
