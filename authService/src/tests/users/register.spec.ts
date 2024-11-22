@@ -129,10 +129,37 @@ describe("POST /auth/register", () => {
       //Act
       //@ts-expect-error: TypeScript does not recognize the app object type
       const response = await request(app).post("/auth/register").send(userData);
+
+      const user = await User.find({ email: userData.email });
       //Assert
       expect(response.statusCode).toBe(400);
+      expect(user).toHaveLength(1); //confirmation only one user exist in the database
     });
   });
 
-  describe("missing fields", () => {});
+  describe("missing fields", () => {
+    it("should return 400 status code if email field is missing", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        password: "13456",
+      };
+
+      //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
+
+      //Assert
+      expect(response.statusCode).toBe(400);
+    });
+
+    it("should return 400 status code if firstName field is missing", async () => {});
+
+    it("should return 400 status code if lastName field is missing", async () => {});
+
+    it("should return 400 status code if password field is missing", async () => {});
+  });
+
+  describe("if fields are not properly formatted", () => {});
 });
