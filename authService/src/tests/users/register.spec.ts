@@ -6,6 +6,7 @@ import { ROLES } from "../../constants/constants";
 import { User } from "../../entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { access } from "fs";
 dotenv.config({
   path: ".env.test.local",
 });
@@ -153,6 +154,43 @@ describe("POST /auth/register", () => {
       //Assert
       expect(response.statusCode).toBe(400);
       expect(user).toHaveLength(1); //confirmation only one user exist in the database
+    });
+    it("should return access token and refresh token inside a cookie", async () => {
+      //Arrange
+      let accessToken = null;
+      let refreshToken = null;
+
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      interface headers {
+        ["set-cookie"]: string[];
+      }
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
+
+      //Act
+      const cookies =
+        (response.headers as unknown as headers)["set-cookie"] || [];
+
+      cookies.forEach((cookie: string) => {
+        //get access token send by server as cookie
+        if (cookie.startsWith("accessToken=")) {
+          accessToken = cookie.split(";")[0].split("=")[1];
+        }
+
+        //get refresh Token sent by server as cookie
+        if (cookie.startsWith("refreshToken=")) {
+          refreshToken = cookie.split(";")[0].split("=")[1];
+        }
+      });
+
+      expect(accessToken).not.toBeNull();
+      expect(refreshToken).not.toBeNull();
     });
   });
 

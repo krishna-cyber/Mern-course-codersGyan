@@ -5,14 +5,13 @@
    "main": "index.js",
    "scripts": {
       "dev": "cross-env NODE_ENV=development.local nodemon src/server.ts",
-      "test": "cross-env NODE_ENV=development.local jest --watch --runInBand",
+      "test": "cross-env NODE_ENV=test.local jest --watch --runInBand",
       "format:check": "prettier  . --check",
       "format:fix": "prettier  . --write",
       "lint:check": "eslint .",
       "lint:fix": "eslint . --fix",
       "prepare": "husky",
       "start": "ts-node src/index.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
    },
    "keywords": [],
    "author": "Krishna Tiwari <tiwarikrishna54321@gmail.com>",
