@@ -8,19 +8,21 @@ class UserService {
   constructor(private User: Model<UserDocument>) {}
 
   async create({ firstName, lastName, email, password }: UserData) {
-    try {
-      const user = new this.User({
-        firstName,
-        lastName,
-        email,
-        password,
-        role: ROLES.CUSTOMER,
-      });
-      return await user.save();
-    } catch (error) {
-      const err = createHttpError(500, "User registration failed");
+    const user = new this.User({
+      firstName,
+      lastName,
+      email,
+      password,
+      role: ROLES.CUSTOMER,
+    });
+    //check for user already exist or not in the database
+    const existingUser = await this.User.findOne({ email });
+
+    if (existingUser) {
+      const err = createHttpError(400, "User already exists with this email");
       throw err;
     }
+    return await user.save();
   }
 }
 

@@ -1,18 +1,25 @@
 import app from "../../app";
 
 import request from "supertest";
-import { closeDatabaseConnection, truncateDatabase } from "../utils/testUtils";
+import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
 import { ROLES } from "../../constants/constants";
 import { User } from "../../entity/User";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config({
+  path: ".env.test.local",
+});
 
 describe("POST /auth/register", () => {
   //get connection from the data source
   //before all test cases this function will rul
-  beforeAll(async () => {});
+  beforeAll(async () => {
+    await connectToDatabase();
+  });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     //clean up the database database truncate
-    await truncateDatabase();
+    await User.deleteMany({});
   });
 
   afterAll(async () => {
@@ -107,6 +114,23 @@ describe("POST /auth/register", () => {
       await request(app).post("/auth/register").send(userData);
       const user = await User.find();
       expect(user[0].role).toBe(ROLES.CUSTOMER);
+    });
+    it("should return 400 status code if user already exists", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      await request(app).post("/auth/register").send(userData);
+      //Act
+      //@ts-expect-error: TypeScript does not recognize the app object type
+      const response = await request(app).post("/auth/register").send(userData);
+      //Assert
+      expect(response.statusCode).toBe(400);
     });
   });
 

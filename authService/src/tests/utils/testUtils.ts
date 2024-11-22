@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
-async function truncateDatabase() {
-  return await mongoose.connection.db?.dropDatabase();
-}
-
 async function closeDatabaseConnection() {
   return await mongoose.connection.close();
 }
 
-export { truncateDatabase, closeDatabaseConnection };
+async function connectToDatabase() {
+  return await mongoose.connect(process.env.MONGO_URI_ATLAS as string);
+}
+
+export { connectToDatabase, closeDatabaseConnection };
