@@ -15,6 +15,7 @@ describe("POST /auth/register", () => {
   //before all test cases this function will rul
   beforeAll(async () => {
     await connectToDatabase();
+    await User.deleteMany({}); //clean up the database
   });
 
   afterEach(async () => {
