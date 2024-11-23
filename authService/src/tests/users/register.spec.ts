@@ -1,7 +1,11 @@
 import app from "../../app";
 
 import request from "supertest";
-import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
+import {
+  closeDatabaseConnection,
+  connectToDatabase,
+  isJWT,
+} from "../utils/testUtils";
 import { ROLES } from "../../constants/constants";
 import { User } from "../../entity/User";
 import mongoose from "mongoose";
@@ -18,13 +22,17 @@ describe("POST /auth/register", () => {
     await connectToDatabase();
     await User.deleteMany({}); //clean up the database
   });
-
-  afterEach(async () => {
-    //clean up the database database truncate
+  beforeEach(async () => {
     await User.deleteMany({});
   });
 
+  // afterEach(async () => {
+  //   //clean up the database database truncate
+  //   await User.deleteMany({});
+  // });
+
   afterAll(async () => {
+    await User.deleteMany({});
     await closeDatabaseConnection();
   });
 
@@ -41,7 +49,7 @@ describe("POST /auth/register", () => {
       };
 
       // Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       // Assert
@@ -60,7 +68,7 @@ describe("POST /auth/register", () => {
 
       // Act
 
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
       // Assert
 
@@ -78,7 +86,7 @@ describe("POST /auth/register", () => {
         password: "123456",
       };
 
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       await request(app).post("/auth/register").send(userData);
       //Assert
       const user = await User.find();
@@ -97,7 +105,7 @@ describe("POST /auth/register", () => {
       };
 
       //Act and Assert
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const user = await request(app).post("/auth/register").send(userData);
 
       // Assert  // user must have id
@@ -112,7 +120,7 @@ describe("POST /auth/register", () => {
         password: "13456",
       };
 
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       await request(app).post("/auth/register").send(userData);
       const user = await User.find();
       expect(user[0].role).toBe(ROLES.CUSTOMER);
@@ -128,7 +136,7 @@ describe("POST /auth/register", () => {
       };
 
       //Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
       const user: { body: { result: { password: string } } } = response;
 
@@ -144,10 +152,10 @@ describe("POST /auth/register", () => {
         password: "13456",
       };
 
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       await request(app).post("/auth/register").send(userData);
       //Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       const user = await User.find({ email: userData.email });
@@ -157,8 +165,8 @@ describe("POST /auth/register", () => {
     });
     it("should return access token and refresh token inside a cookie", async () => {
       //Arrange
-      let accessToken = null;
-      let refreshToken = null;
+      let accessToken: string | null = null;
+      let refreshToken: string | null = null;
 
       const userData = {
         firstName: "Krishna",
@@ -170,7 +178,7 @@ describe("POST /auth/register", () => {
       interface headers {
         ["set-cookie"]: string[];
       }
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       //Act
@@ -191,6 +199,10 @@ describe("POST /auth/register", () => {
 
       expect(accessToken).not.toBeNull();
       expect(refreshToken).not.toBeNull();
+
+      //  check for the jwt token
+      expect(isJWT(accessToken)).toBeTruthy(); // check if the token is a valid jwt token
+      // expect(isJWT(refreshToken)).toBeTruthy(); // check if the token is a valid jwt token
     });
   });
 
@@ -204,7 +216,7 @@ describe("POST /auth/register", () => {
       };
 
       //Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       const user = await User.find({}); //Assert
@@ -221,7 +233,7 @@ describe("POST /auth/register", () => {
       };
 
       //Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       const user = await User.find({}); //Assert
@@ -238,7 +250,7 @@ describe("POST /auth/register", () => {
       };
 
       //Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       const user = await User.find({}); //Assert
@@ -255,7 +267,7 @@ describe("POST /auth/register", () => {
       };
 
       //Act
-      //@ts-expect-error: TypeScript does not recognize the app object type
+      //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
       const user = await User.find({}); //Assert

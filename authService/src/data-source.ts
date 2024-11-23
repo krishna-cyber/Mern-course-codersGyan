@@ -4,7 +4,6 @@ import { Config } from "./config/config";
 import logger from "./config/logger";
 
 import mongoose from "mongoose";
-import app from "./app";
 import startServer from "./server";
 
 mongoose
