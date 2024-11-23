@@ -70,6 +70,7 @@ class AuthController {
         { sub: String(user._id), role: user.role },
         String(Config.JWT_REFRESH_TOKEN_SECRET),
         {
+          jwtid: String(user._id),
           algorithm: "HS256",
           expiresIn: "30d",
           issuer: "authService",

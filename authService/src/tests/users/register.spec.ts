@@ -11,6 +11,7 @@ import { User } from "../../entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { access } from "fs";
+import RefreshToken from "../../entity/RefreshToken";
 dotenv.config({
   path: ".env.test.local",
 });
@@ -200,6 +201,23 @@ describe("POST /auth/register", () => {
       //  check for the jwt token
       expect(isJWT(accessToken)).toBeTruthy(); // check if the token is a valid jwt token
       expect(isJWT(refreshToken)).toBeTruthy(); // check if the token is a valid jwt token
+    });
+    it("should persist refresh token in the database", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+      //@ts-ignore
+      const response = await request(app).post("/auth/register").send(userData);
+
+      //Act
+      const refreshToken = await RefreshToken.find({});
+
+      //Assert
+      expect(refreshToken).toHaveLength(1);
     });
   });
 
