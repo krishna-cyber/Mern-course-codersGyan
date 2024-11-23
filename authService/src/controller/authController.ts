@@ -66,14 +66,15 @@ class AuthController {
           issuer: "authService",
         }
       );
-      // const refreshToken: string = jwt.sign(
-      //   { sub: String(user._id), role: user.role },
-      //   Config.JWT_REFRESH_TOKEN_SECRET as string,
-      //   {
-      //     algorithm: "HS256",
-      //     expiresIn: "30d",
-      //   }
-      // );
+      const refreshToken: string = jwt.sign(
+        { sub: String(user._id), role: user.role },
+        String(Config.JWT_REFRESH_TOKEN_SECRET),
+        {
+          algorithm: "HS256",
+          expiresIn: "30d",
+          issuer: "authService",
+        }
+      );
 
       res.cookie("accessToken", accessToken, {
         domain: "localhost",
@@ -82,7 +83,7 @@ class AuthController {
         maxAge: 1000 * 60 * 60, //1 hr to expire
       });
 
-      res.cookie("refreshToken", "jsklfsdfl", {
+      res.cookie("refreshToken", refreshToken, {
         domain: "localhost",
         httpOnly: true,
         sameSite: "strict",

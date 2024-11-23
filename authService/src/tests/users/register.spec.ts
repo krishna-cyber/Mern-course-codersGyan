@@ -22,18 +22,15 @@ describe("POST /auth/register", () => {
     await connectToDatabase();
     await User.deleteMany({}); //clean up the database
   });
-  beforeEach(async () => {
+
+  afterEach(async () => {
+    //clean up the database database truncate
     await User.deleteMany({});
   });
 
-  // afterEach(async () => {
-  //   //clean up the database database truncate
-  //   await User.deleteMany({});
-  // });
-
   afterAll(async () => {
     await User.deleteMany({});
-    await closeDatabaseConnection();
+    // await closeDatabaseConnection();
   });
 
   describe("given all fields", () => {
@@ -202,7 +199,7 @@ describe("POST /auth/register", () => {
 
       //  check for the jwt token
       expect(isJWT(accessToken)).toBeTruthy(); // check if the token is a valid jwt token
-      // expect(isJWT(refreshToken)).toBeTruthy(); // check if the token is a valid jwt token
+      expect(isJWT(refreshToken)).toBeTruthy(); // check if the token is a valid jwt token
     });
   });
 
