@@ -11,7 +11,7 @@ import { User } from "../../entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { access } from "fs";
-import RefreshToken from "../../entity/RefreshToken";
+import { RefreshToken } from "../../entity/RefreshToken";
 dotenv.config({
   path: ".env.test.local",
 });
@@ -21,17 +21,24 @@ describe("POST /auth/register", () => {
   //before all test cases this function will rul
   beforeAll(async () => {
     await connectToDatabase();
-    await User.deleteMany({}); //clean up the database
+    mongoose.modelNames().map(async (model) => {
+      await mongoose.models[model].deleteMany({});
+    });
+    // await User.deleteMany({}); //clean up the database
+    // await RefreshToken.deleteMany({}); //clean up the database
   });
 
   afterEach(async () => {
     //clean up the database database truncate
     await User.deleteMany({});
+    mongoose.modelNames().map(async (model) => {
+      await mongoose.models[model].deleteMany({});
+    });
   });
 
   afterAll(async () => {
     await User.deleteMany({});
-    // await closeDatabaseConnection();
+    await closeDatabaseConnection();
   });
 
   describe("given all fields", () => {
@@ -218,6 +225,25 @@ describe("POST /auth/register", () => {
 
       //Assert
       expect(refreshToken).toHaveLength(1);
+    });
+
+    it("should refresh token persist in the database with the correct userId", async () => {
+      //Arrange
+      const userData = {
+        firstName: "Krishna",
+        lastName: "Tiwari",
+        email: "tiwarikrishna54321@gmail.com",
+        password: "13456",
+      };
+
+      //@ts-ignore
+      const response = await request(app).post("/auth/register").send(userData);
+
+      //Act
+      const refreshToken = await RefreshToken.find({});
+
+      //Assert
+      expect(String(refreshToken[0].userId)).toBe(response.body.result._id);
     });
   });
 
