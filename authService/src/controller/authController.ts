@@ -62,6 +62,8 @@ class AuthController {
         maxAge: 1000 * 60 * 24 * 30, //1 month to expire
       });
 
+      await this.tokenService.saveRefreshToken(refreshToken, user._id);
+
       res.status(201).json({
         result: user,
         message: "User registered successfully",

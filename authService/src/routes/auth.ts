@@ -5,11 +5,12 @@ import UserService from "../services/userService";
 import logger from "../config/logger";
 import registerValidator from "../validators/registerValidator";
 import TokenService from "../services/tokenService";
+import { RefreshToken } from "../entity/RefreshToken";
 
 const authRouter = Router();
 
 const userService = new UserService(User);
-const tokenService = new TokenService();
+const tokenService = new TokenService(RefreshToken);
 
 const authController = new AuthController(tokenService, userService, logger);
 
