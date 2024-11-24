@@ -3,17 +3,15 @@ import { UserData } from "../types/types";
 import UserService from "../services/userService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
-import jwt from "jsonwebtoken";
-import createHttpError from "http-errors";
-import fs from "fs";
-import path from "path";
-import { Config } from "../config/config";
+
+import TokenService from "../services/tokenService";
 
 interface RegisterUserRequest extends Request {
   body: UserData;
 }
 class AuthController {
   constructor(
+    private tokenService: TokenService,
     private userService: UserService,
     private logger: Logger
   ) {}
@@ -41,41 +39,14 @@ class AuthController {
         lastName,
         email,
       });
-      let privateK: Buffer;
-      try {
-        privateK = fs.readFileSync(
-          path.join(__dirname, "../../certs/privateKey.pem")
-        );
-      } catch (error) {
-        const err = createHttpError(
-          500,
-          "Error generating private key for JWT"
-        );
-        next(err);
-        return;
-      }
-      const accessToken: string = jwt.sign(
-        {
-          sub: String(user._id),
-          role: user.role,
-        },
-        privateK,
-        {
-          algorithm: "RS256",
-          expiresIn: "1h",
-          issuer: "authService",
-        }
-      );
-      const refreshToken: string = jwt.sign(
-        { sub: String(user._id), role: user.role },
-        String(Config.JWT_REFRESH_TOKEN_SECRET),
-        {
-          jwtid: String(user._id),
-          algorithm: "HS256",
-          expiresIn: "30d",
-          issuer: "authService",
-        }
-      );
+
+      const payload = {
+        sub: String(user._id),
+        role: user.role,
+      };
+
+      const accessToken: string = this.tokenService.getAccessToken(payload);
+      const refreshToken: string = this.tokenService.getRefreshToken(payload);
 
       res.cookie("accessToken", accessToken, {
         domain: "localhost",
