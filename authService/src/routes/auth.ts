@@ -30,12 +30,12 @@ authRouter.post(
   }
 );
 
-// authRouter.post(
-//   "/login",
-//   loginValidator,
-//   (req: Request, res: Response, next: NextFunction) => {
-//     authController.login(req, res, next);
-//   }
-// );
+authRouter.post(
+  "/login",
+  loginValidator,
+  (req: Request, res: Response, next: NextFunction) => {
+    authController.login(req, res, next);
+  }
+);
 
 export default authRouter;
