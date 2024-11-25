@@ -33,9 +33,10 @@ class TokenService {
   }
 
   //return refreshtoken
-  getRefreshToken(payload: JwtPayload) {
+  async getRefreshToken(payload: JwtPayload) {
+    const { _id } = await this.saveRefreshToken(payload.sub);
     return jwt.sign(payload, String(Config.JWT_REFRESH_TOKEN_SECRET), {
-      jwtid: String(payload._id),
+      jwtid: String(_id),
       algorithm: "HS256",
       expiresIn: "30d",
       issuer: "authService",
@@ -43,14 +44,13 @@ class TokenService {
   }
 
   //persist refreshToken in DB
-  async saveRefreshToken(token: string, userId: unknown) {
+  saveRefreshToken(userId: unknown) {
     try {
       const refreshToken = new this.RefreshToken({
-        refreshToken: token,
         userId,
         expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), //30 days
       });
-      await refreshToken.save();
+      return refreshToken.save();
     } catch (error) {
       console.log(error);
       const err = createHttpError(500, "Error saving refresh token");

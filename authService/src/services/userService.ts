@@ -24,6 +24,10 @@ class UserService {
     }
     return await user.save();
   }
+
+  async findUserByEmail(email: string) {
+    return await this.User.findOne({ email });
+  }
 }
 
 export default UserService;
