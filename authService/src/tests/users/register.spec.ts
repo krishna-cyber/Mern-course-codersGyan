@@ -95,7 +95,6 @@ describe("POST /auth/register", () => {
       await request(app).post("/auth/register").send(userData);
       //Assert
       const user = await User.find();
-      console.log(user);
 
       expect(user).toHaveLength(1);
     });

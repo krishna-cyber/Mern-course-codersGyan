@@ -4,4 +4,13 @@ const ROLES = {
   MANAGER: "manager",
 } as const;
 
-export { ROLES };
+const ERROR_MESSAGES = {
+  INVALID_CREDENTIALS: "Invalid email or password",
+  EMAIL_ALREADY_EXISTS: "Email already exists",
+  EMAIL_NOT_FOUND: "Email not found",
+  INVALID_TOKEN: "Invalid token",
+  UNAUTHORIZED: "Unauthorized",
+  INVALID_REFRESH: "Invalid refresh token",
+};
+
+export { ROLES, ERROR_MESSAGES };

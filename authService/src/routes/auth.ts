@@ -22,6 +22,10 @@ const authController = new AuthController(
   logger
 );
 
+authRouter.get("/self", (req: Request, res: Response, next: NextFunction) => {
+  authController.login(req, res, next);
+});
+
 authRouter.post(
   "/register",
   registerValidator,

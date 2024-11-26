@@ -7,6 +7,7 @@ import { validationResult } from "express-validator";
 import TokenService from "../services/tokenService";
 import CredentialService from "../services/credentialService";
 import createHttpError from "http-errors";
+import { ERROR_MESSAGES } from "../constants/constants";
 
 interface RegisterUserRequest extends Request {
   body: UserData;
@@ -89,7 +90,7 @@ class AuthController {
       const user = await this.userService.findUserByEmail(email);
 
       if (!user) {
-        const err = createHttpError(400, "Invalid email or password");
+        const err = createHttpError(400, ERROR_MESSAGES.INVALID_CREDENTIALS);
         next(err);
         return;
       }
@@ -101,7 +102,7 @@ class AuthController {
         );
 
       if (!isMatched) {
-        const err = createHttpError(400, "Invalid email or password");
+        const err = createHttpError(400, ERROR_MESSAGES.INVALID_CREDENTIALS);
         next(err);
         return;
       }
@@ -132,6 +133,17 @@ class AuthController {
       res.status(200).json({
         result: user,
         message: "User login successfully",
+      });
+    } catch (error) {
+      next(error);
+      return;
+    }
+  }
+
+  async self(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.status(200).json({
+        result: "user data",
       });
     } catch (error) {
       next(error);
