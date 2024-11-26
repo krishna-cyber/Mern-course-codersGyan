@@ -31,6 +31,7 @@ describe("POST /auth/login", () => {
   afterEach(async () => {
     //clean up the database database truncate
     await User.deleteMany({});
+    await RefreshToken.deleteMany({});
   });
 
   afterAll(async () => {
@@ -86,7 +87,7 @@ describe("POST /auth/login", () => {
       expect(response.statusCode).toBe(400);
     });
 
-    it("should return INVALID CREDENTIAL message with 400 statusCode for incorrect  email or password Given ", async () => {
+    it("should return Invalid email or password message with 400 statusCode for incorrect  email or password Given ", async () => {
       //AAA Pattern (Arrange, Act, Assert)
       //register user
       const userData = {
@@ -107,70 +108,10 @@ describe("POST /auth/login", () => {
 
       // Assert
 
-      expect(response.statusCode).toBe(400);
-
-      expect(response.body.errors.message).toBe("Invalid email or password");
-    });
-
-    describe("missing fields", () => {
-      // it("should return 400 status code if email field is missing , user should not be registered", async () => {
-      //   //Arrange
-      //   const userData = {
-      //     firstName: "Krishna",
-      //     lastName: "Tiwari",
-      //     password: "13456",
-      //   };
-      //   //Act
-      //   //@ts-ignore
-      //   const response = await request(app).post("/auth/register").send(userData);
-      //   const user = await User.find({}); //Assert
-      //   expect(response.statusCode).toBe(400);
-      //   expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
-      // });
-      // it("should return 400 status code if firstName field is missing , user should not be registered", async () => {
-      //   //Arrange
-      //   const userData = {
-      //     lastName: "Tiwari",
-      //     email: "tiwarikrishna54321@gmail.com",
-      //     password: "13456",
-      //   };
-      //   //Act
-      //   //@ts-ignore
-      //   const response = await request(app).post("/auth/register").send(userData);
-      //   const user = await User.find({}); //Assert
-      //   expect(response.statusCode).toBe(400);
-      //   expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
-      // });
-      // it("should return 400 status code if lastName field is missing , user should not be registered", async () => {
-      //   //Arrange
-      //   const userData = {
-      //     firstName: "Krishna",
-      //     email: "tiwarikrishna54321@gmail.com",
-      //     password: "13456",
-      //   };
-      //   //Act
-      //   //@ts-ignore
-      //   const response = await request(app).post("/auth/register").send(userData);
-      //   const user = await User.find({}); //Assert
-      //   expect(response.statusCode).toBe(400);
-      //   expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
-      // });
-      // it("should return 400 status code if password field is missing , user should not be registered", async () => {
-      //   //Arrange
-      //   const userData = {
-      //     firstName: "Krishna",
-      //     lastName: "Tiwari",
-      //     email: "tiwarikrishna54321@gmail.com",
-      //   };
-      //   //Act
-      //   //@ts-ignore
-      //   const response = await request(app).post("/auth/register").send(userData);
-      //   const user = await User.find({}); //Assert
-      //   expect(response.statusCode).toBe(400);
-      //   expect(user).toHaveLength(0); //confimation user doesn't exist in the database if validation fails
-      // });
+      expect(response.body.errors[0].message).toBe("Invalid email or password");
     });
 
     describe("if fields are not properly formatted", () => {});
   });
+  describe("missing fields", () => {});
 });

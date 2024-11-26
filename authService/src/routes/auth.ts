@@ -23,7 +23,7 @@ const authController = new AuthController(
 );
 
 authRouter.get("/self", (req: Request, res: Response, next: NextFunction) => {
-  authController.login(req, res, next);
+  authController.self(req, res, next);
 });
 
 authRouter.post(
