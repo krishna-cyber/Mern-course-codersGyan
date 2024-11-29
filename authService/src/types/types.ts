@@ -9,10 +9,7 @@ interface UserData {
 }
 
 interface AuthRequest extends Request {
-  auth: {
-    sub: string;
-    role: string;
-  };
+  auth: jwt.JwtPayload;
 }
 
 interface AuthCookie {

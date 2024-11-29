@@ -25,7 +25,7 @@ class TokenService {
 
   //return accessToken
   getAccessToken(payload: JwtPayload) {
-    let accessTokenPrivateKey = this.getAccessTokenPrivateKey();
+    const accessTokenPrivateKey = this.getAccessTokenPrivateKey();
     return jwt.sign(payload, accessTokenPrivateKey, {
       algorithm: "RS256",
       expiresIn: "1h",
@@ -55,6 +55,16 @@ class TokenService {
     } catch (error) {
       console.log(error);
       const err = createHttpError(500, "Error saving refresh token");
+      throw err;
+    }
+  }
+
+  //remove refreshToken from DB
+  async removeRefreshToken(jti: string) {
+    try {
+      return await this.RefreshToken.findByIdAndDelete(jti);
+    } catch (error) {
+      const err = createHttpError(500, "Error removing refresh token");
       throw err;
     }
   }

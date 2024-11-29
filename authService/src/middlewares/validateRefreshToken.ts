@@ -4,6 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { AuthCookie } from "../types/types";
 import { Config } from "../config/config";
 import { RefreshToken } from "../entity/RefreshToken";
+import logger from "../config/logger";
 
 export default expressjwt({
   secret: Config.JWT_REFRESH_TOKEN_SECRET!,
@@ -19,6 +20,7 @@ export default expressjwt({
       );
       return refreshToken == null;
     } catch (error) {
+      logger.error(error);
       return true;
     }
   },

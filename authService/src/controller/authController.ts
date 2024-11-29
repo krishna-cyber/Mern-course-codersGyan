@@ -20,6 +20,26 @@ class AuthController {
     private logger: Logger
   ) {}
 
+  async resCookieAccessTokenAndRefreshToken(
+    res: Response,
+    accessToken: string,
+    refreshToken: string
+  ) {
+    res.cookie("accessToken", accessToken, {
+      domain: "localhost",
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60, //1 hr to expire
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      domain: "localhost",
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 24 * 30, //1 month to expire
+    });
+  }
+
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
     try {
       const result = validationResult(req);
@@ -53,19 +73,7 @@ class AuthController {
       const refreshToken: string =
         await this.tokenService.getRefreshToken(payload);
 
-      res.cookie("accessToken", accessToken, {
-        domain: "localhost",
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 60, //1 hr to expire
-      });
-
-      res.cookie("refreshToken", refreshToken, {
-        domain: "localhost",
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 24 * 30, //1 month to expire
-      });
+      this.resCookieAccessTokenAndRefreshToken(res, accessToken, refreshToken);
 
       res.status(201).json({
         result: user,
@@ -116,19 +124,7 @@ class AuthController {
       const refreshToken: string =
         await this.tokenService.getRefreshToken(payload);
 
-      res.cookie("accessToken", accessToken, {
-        domain: "localhost",
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 60, //1 hr to expire
-      });
-
-      res.cookie("refreshToken", refreshToken, {
-        domain: "localhost",
-        httpOnly: true,
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 24 * 30, //1 month to expire
-      });
+      this.resCookieAccessTokenAndRefreshToken(res, accessToken, refreshToken);
 
       res.status(200).json({
         result: user,
@@ -142,7 +138,7 @@ class AuthController {
 
   async self(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const user = await this.userService.findUserById(req.auth.sub);
+      const user = await this.userService.findUserById(req.auth.sub!);
 
       res.status(200).json({
         result: user,
@@ -153,8 +149,33 @@ class AuthController {
     }
   }
 
-  async refresh(req: Request, res: Response, next: NextFunction) {
-    res.status(200).json({});
+  async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const user = await this.userService.findUserById(req.auth.sub!);
+
+      if (!user) {
+        const err = createHttpError(410, ERROR_MESSAGES.USER_DELETED);
+        next(err);
+        return;
+      }
+      const payload = {
+        sub: String(user._id),
+        role: user.role,
+      };
+
+      const accessToken: string = this.tokenService.getAccessToken(payload);
+      const refreshToken: string =
+        await this.tokenService.getRefreshToken(payload);
+
+      this.tokenService.removeRefreshToken(req.auth.jti!);
+
+      this.resCookieAccessTokenAndRefreshToken(res, accessToken, refreshToken);
+
+      res.status(200).json({});
+    } catch (error) {
+      next(error);
+      return;
+    }
   }
 }
 

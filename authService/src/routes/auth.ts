@@ -58,7 +58,7 @@ authRouter.post(
   "/refresh",
   validateRefreshToken as RequestHandler,
   (req: Request, res: Response, next: NextFunction) => {
-    authController.refresh(req, res, next);
+    authController.refresh(req as AuthRequest, res, next);
   }
 );
 

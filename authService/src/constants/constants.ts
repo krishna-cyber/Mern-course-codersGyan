@@ -11,6 +11,8 @@ const ERROR_MESSAGES = {
   INVALID_TOKEN: "Invalid token",
   UNAUTHORIZED: "Unauthorized",
   INVALID_REFRESH: "Invalid refresh token",
+  USER_NOT_FOUND: "User not found",
+  USER_DELETED: "User deleted",
 };
 
 export { ROLES, ERROR_MESSAGES };
