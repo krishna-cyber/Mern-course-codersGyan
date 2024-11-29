@@ -177,6 +177,23 @@ class AuthController {
       return;
     }
   }
+
+  async logout(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      await this.tokenService.removeRefreshToken(req.auth.jti!);
+      this.logger.info(`User logged out successfully`, req.auth.sub);
+
+      this.logger.info(`Refresh token removed successfully`, req.auth.jti);
+
+      res.clearCookie("accessToken");
+
+      res.clearCookie("refreshToken");
+
+      res.status(200).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default AuthController;
