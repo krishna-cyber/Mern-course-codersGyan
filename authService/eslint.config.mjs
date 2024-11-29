@@ -1,29 +1,19 @@
-// @ts-nocheck
-
-import eslint from "@eslint/js";
+import globals from "globals";
+import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
+/** @type {import('eslint').Linter.Config[]} */
+export default [
   {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
+    files: ["**/*.{js,mjs,cjs,ts}"],
   },
-  {
-    ignores: ["dist", "node_modules", "eslint.config.mjs"],
-  },
+  { languageOptions: { globals: globals.browser } },
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     rules: {
-      // "no-console": "error",
-      "@typescript-eslint/no-misused-promises": "off",
-      "no-unused-vars": "warning",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
+      "no-console": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
-  }
-);
+  },
+];

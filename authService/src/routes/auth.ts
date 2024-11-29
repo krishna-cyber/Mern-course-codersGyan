@@ -1,4 +1,10 @@
-import { NextFunction, Request, Response, Router } from "express";
+import {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+  Router,
+} from "express";
 import AuthController from "../controller/authController";
 import { User } from "../entity/User";
 import UserService from "../services/userService";
@@ -8,7 +14,9 @@ import TokenService from "../services/tokenService";
 import { RefreshToken } from "../entity/RefreshToken";
 import loginValidator from "../validators/loginValidator";
 import CredentialService from "../services/credentialService";
-
+import authenticate from "../middlewares/authenticate";
+import { AuthRequest } from "../types/types";
+import validateRefreshToken from "../middlewares/validateRefreshToken";
 const authRouter = Router();
 
 const userService = new UserService(User);
@@ -22,9 +30,13 @@ const authController = new AuthController(
   logger
 );
 
-authRouter.get("/self", (req: Request, res: Response, next: NextFunction) => {
-  authController.self(req, res, next);
-});
+authRouter.get(
+  "/self",
+  authenticate as RequestHandler,
+  (req: Request, res: Response, next: NextFunction) => {
+    authController.self(req as AuthRequest, res, next);
+  }
+);
 
 authRouter.post(
   "/register",
@@ -39,6 +51,14 @@ authRouter.post(
   loginValidator,
   (req: Request, res: Response, next: NextFunction) => {
     authController.login(req, res, next);
+  }
+);
+
+authRouter.post(
+  "/refresh",
+  validateRefreshToken as RequestHandler,
+  (req: Request, res: Response, next: NextFunction) => {
+    authController.refresh(req, res, next);
   }
 );
 

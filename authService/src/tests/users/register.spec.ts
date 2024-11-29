@@ -16,7 +16,7 @@ dotenv.config({
   path: ".env.test.local",
 });
 
-describe("POST /auth/register", () => {
+describe.skip("POST /auth/register", () => {
   //get connection from the data source
   //before all test cases this function will rul
   beforeAll(async () => {

@@ -4,8 +4,14 @@ import path from "path";
 const envPath = path.join(__dirname, `../../.env.${process.env.NODE_ENV}`);
 
 config({ path: envPath });
-const { PORT, NODE_ENV, MONGO_URI_ATLAS, DB_NAME, JWT_REFRESH_TOKEN_SECRET } =
-  process.env;
+const {
+  PORT,
+  NODE_ENV,
+  MONGO_URI_ATLAS,
+  DB_NAME,
+  JWT_REFRESH_TOKEN_SECRET,
+  JWKS_URI,
+} = process.env;
 
 const Config = {
   PORT,
@@ -13,6 +19,7 @@ const Config = {
   MONGO_URI_ATLAS,
   DB_NAME,
   JWT_REFRESH_TOKEN_SECRET,
+  JWKS_URI,
 };
 
 // Object.freeze(Config);

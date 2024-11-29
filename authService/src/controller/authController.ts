@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UserData } from "../types/types";
+import { AuthRequest, UserData } from "../types/types";
 import UserService from "../services/userService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
@@ -140,15 +140,21 @@ class AuthController {
     }
   }
 
-  async self(req: Request, res: Response, next: NextFunction) {
+  async self(req: AuthRequest, res: Response, next: NextFunction) {
     try {
+      const user = await this.userService.findUserById(req.auth.sub);
+
       res.status(200).json({
-        result: "user data",
+        result: user,
       });
     } catch (error) {
       next(error);
       return;
     }
+  }
+
+  async refresh(req: Request, res: Response, next: NextFunction) {
+    res.status(200).json({});
   }
 }
 

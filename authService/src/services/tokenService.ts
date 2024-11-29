@@ -25,7 +25,8 @@ class TokenService {
 
   //return accessToken
   getAccessToken(payload: JwtPayload) {
-    return jwt.sign(payload, this.getAccessTokenPrivateKey(), {
+    let accessTokenPrivateKey = this.getAccessTokenPrivateKey();
+    return jwt.sign(payload, accessTokenPrivateKey, {
       algorithm: "RS256",
       expiresIn: "1h",
       issuer: "authService",

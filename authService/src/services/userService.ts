@@ -28,6 +28,10 @@ class UserService {
   async findUserByEmail(email: string) {
     return await this.User.findOne({ email });
   }
+
+  async findUserById(id: string) {
+    return await this.User.findById(id).select("-password");
+  }
 }
 
 export default UserService;

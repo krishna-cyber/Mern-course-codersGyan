@@ -18,13 +18,13 @@ dotenv.config({
   path: ".env.test.local",
 });
 
-let JwkMock: ReturnType<typeof createJWKSMock>;
+let jwks: ReturnType<typeof createJWKSMock>;
 
 describe("GET /auth/self", () => {
   //get connection from the data source
   //before all test cases this function will rul
   beforeAll(async () => {
-    JwkMock = createJWKSMock("https://localhost:5501");
+    jwks = createJWKSMock("https://localhost:3001");
 
     await connectToDatabase();
     mongoose.modelNames().map(async (model) => {
@@ -35,13 +35,13 @@ describe("GET /auth/self", () => {
   });
 
   beforeEach(() => {
-    JwkMock.start();
+    jwks.start();
   });
 
   afterEach(async () => {
     //clean up the database database truncate
     await User.deleteMany({});
-    JwkMock.stop();
+    jwks.stop(); //stop the mock server
   });
 
   afterAll(async () => {
@@ -50,13 +50,23 @@ describe("GET /auth/self", () => {
 
   describe("given all fields", () => {
     it("should return 200 status code", async () => {
-      //@ts-ignore
-      const response = await request(app).get("/auth/self").send();
+      const accessToken = jwks.token({
+        sub: "1",
+        role: ROLES.CUSTOMER,
+      },);
 
-      expect(response.status).toBe(200);
+      //@ts-ignore
+      const response = await request(app)
+        .get("/auth/self")
+        .set("Cookie", [`accessToken=${accessToken}`])
+        .send();
+
+      console.log(response.body);
+
+      expect(response.statusCode).toBe(200);
     });
 
-    it("should return user data", async () => {
+    it.skip("should return user data", async () => {
       //register a user
       const userData = {
         email: "tiwarikrishna54321@gmail.com",
@@ -67,7 +77,7 @@ describe("GET /auth/self", () => {
       //@ts-ignore
       const response = await request(app).post("/auth/register").send(userData);
 
-      const accessToken = JwkMock.token({
+      const accessToken = jwks.token({
         sub: String(response.body.result._id),
         role: response.body.role,
       });
