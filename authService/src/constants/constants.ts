@@ -13,6 +13,7 @@ const ERROR_MESSAGES = {
   INVALID_REFRESH: "Invalid refresh token",
   USER_NOT_FOUND: "User not found",
   USER_DELETED: "User deleted",
+  RESOURCES_NOT_FOUND: "Resources not found",
 };
 
 export { ROLES, ERROR_MESSAGES };

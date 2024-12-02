@@ -1,19 +1,13 @@
 import app from "../../app";
-import jwksra from "mock-jwks";
 
 import request from "supertest";
-import {
-  closeDatabaseConnection,
-  connectToDatabase,
-  isJWT,
-} from "../utils/testUtils";
+import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
 import { ROLES } from "../../constants/constants";
 import { User } from "../../entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { access } from "fs";
-import { RefreshToken } from "../../entity/RefreshToken";
 import createJWKSMock from "mock-jwks";
+
 dotenv.config({
   path: ".env.test.local",
 });
@@ -53,15 +47,13 @@ describe("GET /auth/self", () => {
       const accessToken = jwks.token({
         sub: "1",
         role: ROLES.CUSTOMER,
-      },);
+      });
 
       //@ts-ignore
       const response = await request(app)
         .get("/auth/self")
         .set("Cookie", [`accessToken=${accessToken}`])
         .send();
-
-      console.log(response.body);
 
       expect(response.statusCode).toBe(200);
     });

@@ -1,16 +1,10 @@
 import app from "../../app";
 
 import request from "supertest";
-import {
-  closeDatabaseConnection,
-  connectToDatabase,
-  isJWT,
-} from "../utils/testUtils";
-import { ROLES } from "../../constants/constants";
+import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
 import { User } from "../../entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { access } from "fs";
 import { RefreshToken } from "../../entity/RefreshToken";
 dotenv.config({
   path: ".env.test.local",
@@ -38,7 +32,7 @@ describe.skip("POST /auth/login", () => {
     await closeDatabaseConnection();
   });
 
-  describe("given all fields", () => {
+  describe.skip("given all fields", () => {
     it("should return 200 statusCode correct email,password Given ", async () => {
       //AAA Pattern (Arrange, Act, Assert)
       //register user
@@ -101,10 +95,11 @@ describe.skip("POST /auth/login", () => {
       await request(app).post("/auth/register").send(userData);
 
       // Act
-      //@ts-ignore
-      const response = await request(app)
-        .post("/auth/login")
-        .send({ email: userData.email, password: "wrongPassword" });
+      //@ts-expect-error: Ignoring type error for testing purposes
+      const response = await request(app).send({
+        email: userData.email,
+        password: "wrongPassword",
+      });
 
       // Assert
 

@@ -5,32 +5,40 @@ import bcrypt from "bcryptjs";
 // Define the User document and the User model
 interface UserDocument extends UserData, Document {
   role: string;
+  tenantId?: mongoose.Schema.Types.ObjectId;
 }
 
-const userSchema = new mongoose.Schema<UserDocument>({
-  firstName: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema<UserDocument>(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      default: ROLES.CUSTOMER,
+    },
+    tenantId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-    default: ROLES.CUSTOMER,
-  },
-});
+  { timestamps: true }
+);
 
 // hash password before saving to the database
 userSchema.pre("save", function (next) {

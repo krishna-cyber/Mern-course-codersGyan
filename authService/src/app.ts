@@ -9,6 +9,7 @@ import authRouter from "./routes/auth";
 // import "./data-source";
 
 import "../src/data-source";
+import tenantRouter from "./routes/tenant";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(morgan("dev"));
 
 // router binding
 app.use("/auth", authRouter);
+app.use("/tenants", tenantRouter);
 
 // app.post(
 //   "/auth/register",
