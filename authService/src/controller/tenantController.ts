@@ -84,18 +84,19 @@ export default class TenantController {
       return;
     }
   }
-  // async updateTenantById(req: Request, res: Response, next: NextFunction) {
-  //   const { id } = req.params;
-  //   try {
-  //     const updatedTenant = await this.tenantService.updateTenantById(id, data);
-  //     res.json({
-  //       result: updatedTenant,
-  //       message: "Tenant updated successfully",
-  //       meta: null,
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //     return;
-  //   }
-  // }
+  async updateTenantById(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const data = req.body;
+    try {
+      const updatedTenant = await this.tenantService.updateTenantById(id, data);
+      res.json({
+        result: updatedTenant,
+        message: "Tenant updated successfully",
+        meta: null,
+      });
+    } catch (error) {
+      next(error);
+      return;
+    }
+  }
 }

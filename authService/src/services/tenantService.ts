@@ -44,12 +44,12 @@ export default class TenantService {
       throw err;
     }
   }
-  // async updateTenantById(_id: string, data) {
-  //   try {
-  //     return await this.Tenant.deleteOne({ _id });
-  //   } catch (error) {
-  //     const err = createHttpError(500, "Error while deleting tenant");
-  //     throw err;
-  //   }
-  // }
+  async updateTenantById(_id: string, data: Partial<TenantsDocument>) {
+    try {
+      return await this.Tenant.findOneAndUpdate({ _id }, data);
+    } catch (error) {
+      const err = createHttpError(500, "Error while deleting tenant");
+      throw err;
+    }
+  }
 }

@@ -41,13 +41,12 @@ tenantRouter
     (req: Request, res: Response, next: NextFunction) =>
       tenantController.getTenantById(req, res, next)
   )
-  // .patch(
-  //   authenticate as RequestHandler,
-  //   canAccess([ROLES.ADMIN]) as RequestHandler,
-  //   (req: Request, res: Response, next: NextFunction) =>
-  //     tenantController.updateTenantById(req, res, next)
-  // )
-
+  .patch(
+    authenticate as RequestHandler,
+    canAccess([ROLES.ADMIN]) as RequestHandler,
+    (req: Request, res: Response, next: NextFunction) =>
+      tenantController.updateTenantById(req, res, next)
+  )
   .delete(
     authenticate as RequestHandler,
     canAccess([ROLES.ADMIN]) as RequestHandler,
