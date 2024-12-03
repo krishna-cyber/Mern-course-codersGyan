@@ -19,11 +19,13 @@ export default class UserController {
         lastName,
         email,
         password,
+        role,
       });
       this.logger.info(`User created successfully`, user._id);
-
+      // @ts-ignore
+      const { password: pw, ...userDocument } = user._doc;
       res.status(201).json({
-        result: user,
+        result: userDocument,
         message: "User created successfully",
         meta: null,
       });

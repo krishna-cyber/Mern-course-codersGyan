@@ -95,7 +95,7 @@ class AuthController {
       const { email, password } = req.body;
 
       //check for email and password matched or not
-      const user = await this.userService.findUserByEmail(email);
+      const user = await this.userService.findUserByEmail(email, true);
 
       if (!user) {
         const err = createHttpError(400, ERROR_MESSAGES.INVALID_CREDENTIALS);
@@ -125,9 +125,10 @@ class AuthController {
         await this.tokenService.getRefreshToken(payload);
 
       this.resCookieAccessTokenAndRefreshToken(res, accessToken, refreshToken);
-
+      //@ts-ignore
+      const { password: pw, ...userData } = user._doc;
       res.status(200).json({
-        result: user,
+        result: userData,
         message: "User login successfully",
       });
     } catch (error) {

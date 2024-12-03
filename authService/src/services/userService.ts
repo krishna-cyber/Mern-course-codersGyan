@@ -25,8 +25,10 @@ class UserService {
     return await user.save();
   }
 
-  async findUserByEmail(email: string) {
-    return await this.User.findOne({ email });
+  async findUserByEmail(email: string, allFields = false) {
+    return allFields
+      ? await this.User.findOne({ email })
+      : await this.User.findOne({ email }).select("-password");
   }
 
   async findUserById(id: string) {

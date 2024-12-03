@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { Model } from "mongoose";
+import { UserDocument } from "../entity/User";
 
 class CredentialService {
-  constructor() {}
+  constructor(private User: Model<UserDocument>) {}
   async checkForPasswordMatch(
     password: string,
     hashedPassword: string

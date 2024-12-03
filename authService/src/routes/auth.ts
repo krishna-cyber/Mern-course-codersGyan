@@ -22,7 +22,7 @@ const authRouter = Router();
 
 const userService = new UserService(User);
 const tokenService = new TokenService(RefreshToken);
-const credentialService = new CredentialService();
+const credentialService = new CredentialService(User);
 
 const authController = new AuthController(
   tokenService,

@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 interface UserDocument extends UserData, Document {
   role: string;
   tenantId?: mongoose.Schema.Types.ObjectId;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -57,6 +58,14 @@ userSchema.pre("save", function (next) {
     next();
   });
 });
+
+//define function for password comparision
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+) {
+  const user = this as UserDocument;
+  return await bcrypt.compare(candidatePassword, user.password);
+};
 
 const User = mongoose.model<UserDocument>("User", userSchema);
 
