@@ -6,6 +6,7 @@ interface UserData {
   lastName: string;
   email: string;
   password: string;
+  role?: string;
 }
 
 interface AuthRequest extends Request {

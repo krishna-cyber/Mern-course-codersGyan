@@ -46,7 +46,9 @@ export default class TenantService {
   }
   async updateTenantById(_id: string, data: Partial<TenantsDocument>) {
     try {
-      return await this.Tenant.findOneAndUpdate({ _id }, data);
+      return await this.Tenant.findOneAndUpdate({ _id }, data, {
+        returnOriginal: false,
+      });
     } catch (error) {
       const err = createHttpError(500, "Error while deleting tenant");
       throw err;
