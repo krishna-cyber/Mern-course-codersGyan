@@ -33,25 +33,25 @@ userRouter.get(
     userController.getUsers(req, res, next)
 );
 
-// userRouter
-//   .route("/:id")
-//   .get(
-//     authenticate as RequestHandler,
-//     canAccess([ROLES.ADMIN]) as RequestHandler,
-//     (req: Request, res: Response, next: NextFunction) =>
-//       userController.getTenantById(req, res, next)
-//   )
-//   .patch(
-//     authenticate as RequestHandler,
-//     canAccess([ROLES.ADMIN]) as RequestHandler,
-//     (req: Request, res: Response, next: NextFunction) =>
-//       userController.updateTenantById(req, res, next)
-//   )
-//   .delete(
-//     authenticate as RequestHandler,
-//     canAccess([ROLES.ADMIN]) as RequestHandler,
-//     (req: Request, res: Response, next: NextFunction) =>
-//       userController.deleteTenantById(req, res, next)
-//   );
+userRouter
+  .route("/:id")
+  .get(
+    authenticate as RequestHandler,
+    canAccess([ROLES.ADMIN]) as RequestHandler,
+    (req: Request, res: Response, next: NextFunction) =>
+      userController.getUserDetailsById(req, res, next)
+  )
+  .patch(
+    authenticate as RequestHandler,
+    canAccess([ROLES.ADMIN]) as RequestHandler,
+    (req: Request, res: Response, next: NextFunction) =>
+      userController.updateUserById(req, res, next)
+  )
+  .delete(
+    authenticate as RequestHandler,
+    canAccess([ROLES.ADMIN]) as RequestHandler,
+    (req: Request, res: Response, next: NextFunction) =>
+      userController.deleteUserById(req, res, next)
+  );
 
 export default userRouter;

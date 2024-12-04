@@ -92,7 +92,7 @@ export default class UserController {
       return;
     }
   }
-  async updateTenantById(req: Request, res: Response, next: NextFunction) {
+  async updateUserById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
     const data = req.body;
     try {
