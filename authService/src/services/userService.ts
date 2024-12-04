@@ -36,7 +36,7 @@ class UserService {
   }
 
   async getUserLists() {
-    return await this.User.find({});
+    return await this.User.find({}).select("-password");
   }
 
   async deleteUserById(_id: string) {
@@ -49,5 +49,4 @@ class UserService {
     });
   }
 }
-
 export default UserService;

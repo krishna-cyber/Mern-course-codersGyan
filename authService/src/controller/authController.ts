@@ -74,9 +74,11 @@ class AuthController {
         await this.tokenService.getRefreshToken(payload);
 
       this.resCookieAccessTokenAndRefreshToken(res, accessToken, refreshToken);
+      // @ts-ignore
+      const { password: pw, ...userData } = user._doc;
 
       res.status(201).json({
-        result: user,
+        result: userData,
         message: "User registered successfully",
       });
     } catch (error) {

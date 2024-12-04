@@ -3,7 +3,11 @@ import { UserData } from "../types/types";
 import { ROLES } from "../constants/constants";
 import bcrypt from "bcryptjs";
 // Define the User document and the User model
-interface UserDocument extends UserData, Document {
+interface UserDocument extends Document {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
   role: string;
   tenantId?: mongoose.Schema.Types.ObjectId;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -27,6 +31,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
