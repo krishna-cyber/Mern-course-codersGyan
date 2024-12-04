@@ -3,7 +3,13 @@ import { Logger } from "winston";
 import { ERROR_MESSAGES, ROLES } from "../constants/constants";
 import UserService from "../services/userService";
 import createHttpError from "http-errors";
-import { create } from "domain";
+import { validationResult } from "express-validator";
+import { UserData } from "../types/types";
+import { Require_id } from "mongoose";
+
+interface RegisterUserRequest extends Request {
+  body: UserData;
+}
 
 export default class UserController {
   constructor(
@@ -93,9 +99,15 @@ export default class UserController {
     }
   }
   async updateUserById(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
     const data = req.body;
+    const { id } = req.params;
     try {
+      const result = validationResult(req);
+      if (!result.isEmpty()) {
+        res.status(400).json({ errors: result.array() });
+        return;
+      }
+
       const updatedUser = await this.userService.updateUserById(id, data);
       res.json({
         result: updatedUser,

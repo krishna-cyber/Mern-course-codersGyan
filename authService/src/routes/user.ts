@@ -12,6 +12,7 @@ import { ROLES } from "../constants/constants";
 import UserService from "../services/userService";
 import { User } from "../entity/User";
 import UserController from "../controller/userController";
+import validateUserUpdataData from "../validators/validateUserUpdataData";
 const userRouter = Router();
 
 const userService = new UserService(User);
@@ -44,6 +45,7 @@ userRouter
   .patch(
     authenticate as RequestHandler,
     canAccess([ROLES.ADMIN]) as RequestHandler,
+    validateUserUpdataData,
     (req: Request, res: Response, next: NextFunction) =>
       userController.updateUserById(req, res, next)
   )

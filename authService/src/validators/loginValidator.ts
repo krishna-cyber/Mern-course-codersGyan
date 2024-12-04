@@ -1,18 +1,20 @@
-import { checkSchema } from "express-validator";
+import { checkExact, checkSchema } from "express-validator";
 
-export default checkSchema({
-  email: {
-    notEmpty: {
-      errorMessage: "Email is required",
+export default checkExact(
+  checkSchema({
+    email: {
+      notEmpty: {
+        errorMessage: "Email is required",
+      },
+      isEmail: {
+        errorMessage: "Email should be a valid email address",
+      },
     },
-    isEmail: {
-      errorMessage: "Email should be a valid email address",
-    },
-  },
 
-  password: {
-    notEmpty: {
-      errorMessage: "Password is required",
+    password: {
+      notEmpty: {
+        errorMessage: "Password is required",
+      },
     },
-  },
-});
+  })
+);
