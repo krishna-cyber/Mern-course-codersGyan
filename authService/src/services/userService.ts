@@ -46,7 +46,7 @@ class UserService {
   async updateUserById(_id: string, data: UserData) {
     return await this.User.findByIdAndUpdate(_id, data, {
       new: true,
-    });
+    }).select("-password");
   }
 }
 export default UserService;
