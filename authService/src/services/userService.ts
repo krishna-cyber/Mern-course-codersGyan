@@ -27,16 +27,16 @@ class UserService {
 
   async findUserByEmail(email: string, allFields = false) {
     return allFields
-      ? await this.User.findOne({ email })
-      : await this.User.findOne({ email }).select("-password");
+      ? await this.User.findOne({ email }).select("+password")
+      : await this.User.findOne({ email });
   }
 
   async findUserById(id: string) {
-    return await this.User.findById(id).select("-password");
+    return await this.User.findById(id);
   }
 
   async getUserLists() {
-    return await this.User.find({}).select("-password");
+    return await this.User.find({});
   }
 
   async deleteUserById(_id: string) {
@@ -46,7 +46,7 @@ class UserService {
   async updateUserById(_id: string, data: UserData) {
     return await this.User.findByIdAndUpdate(_id, data, {
       new: true,
-    }).select("-password");
+    });
   }
 }
 export default UserService;
