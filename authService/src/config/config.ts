@@ -11,6 +11,7 @@ const {
   DB_NAME,
   JWT_REFRESH_TOKEN_SECRET,
   JWKS_URI,
+  PRIVATE_KEY,
 } = process.env;
 
 const Config = {
@@ -20,6 +21,7 @@ const Config = {
   DB_NAME,
   JWT_REFRESH_TOKEN_SECRET,
   JWKS_URI,
+  PRIVATE_KEY,
 };
 
 // Object.freeze(Config);

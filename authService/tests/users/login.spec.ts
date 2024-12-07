@@ -1,16 +1,16 @@
-import app from "../../app";
+import app from "../../src/app";
 
 import request from "supertest";
 import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
-import { User } from "../../entity/User";
+import { User } from "../../src/entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { RefreshToken } from "../../entity/RefreshToken";
+import { RefreshToken } from "../../src/entity/RefreshToken";
 dotenv.config({
   path: ".env.test.local",
 });
 
-describe.skip("POST /auth/login", () => {
+describe("POST /auth/login", () => {
   //get connection from the data source
   //before all test cases this function will rul
   beforeAll(async () => {
@@ -32,7 +32,7 @@ describe.skip("POST /auth/login", () => {
     await closeDatabaseConnection();
   });
 
-  describe.skip("given all fields", () => {
+  describe("given all fields", () => {
     it("should return 200 statusCode correct email,password Given ", async () => {
       //AAA Pattern (Arrange, Act, Assert)
       //register user
@@ -57,7 +57,7 @@ describe.skip("POST /auth/login", () => {
       expect(response.statusCode).toBe(200);
     });
 
-    it("should return 400 statusCode for incorrect  email or password Given ", async () => {
+    it("should return 400 statusCode for incorrect  email or password Given and message INVALID EMAIL OR PASSWORD ", async () => {
       //AAA Pattern (Arrange, Act, Assert)
       //register user
       const userData = {
@@ -74,37 +74,21 @@ describe.skip("POST /auth/login", () => {
       //@ts-ignore
       const response = await request(app)
         .post("/auth/login")
-        .send({ email: "wrong", password: userData.password });
+        .send({ email: "wrongemail@gmail.com", password: userData.password });
 
       // Assert
 
       expect(response.statusCode).toBe(400);
+      expect(response.body.errors[0].msg).toBe("Invalid email or password");
     });
 
-    it("should return Invalid email or password message with 400 statusCode for incorrect  email or password Given ", async () => {
-      //AAA Pattern (Arrange, Act, Assert)
-      //register user
-      const userData = {
-        firstName: "Krishna",
-        lastName: "Tiwari",
-        email: "tiwarikrishna54321@gmail.com",
-        password: "123456",
-      };
+    it.todo(
+      "should return error if extra field except email or password is given"
+    );
 
-      //@ts-ignore
-      await request(app).post("/auth/register").send(userData);
-
-      // Act
-      //@ts-expect-error: Ignoring type error for testing purposes
-      const response = await request(app).send({
-        email: userData.email,
-        password: "wrongPassword",
-      });
-
-      // Assert
-
-      expect(response.body.errors[0].message).toBe("Invalid email or password");
-    });
+    it.todo(
+      "should return accessToken and refreshToken after login with valid email and password"
+    );
 
     describe("if fields are not properly formatted", () => {});
   });

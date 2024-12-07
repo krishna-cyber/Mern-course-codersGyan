@@ -6,4 +6,8 @@ module.exports = {
   },
   // in tree structure
   verbose: true,
+  collectCoverage: true,
+  preset: "ts-jest",
+  coverageProvider: "v8",
+  collectCoverageFrom: ["src/**/*.ts", "!tests/**", "!**/node_modules/**"],
 };

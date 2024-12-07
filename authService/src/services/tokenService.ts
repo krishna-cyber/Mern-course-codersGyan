@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { Config } from "../config/config";
 import createHttpError from "http-errors";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { RefreshTokenDocument } from "../entity/RefreshToken";
 
 class TokenService {
@@ -21,6 +21,7 @@ class TokenService {
       const err = createHttpError(500, "Error generating private key for JWT");
       throw err;
     }
+    return privateK;
   }
 
   //return accessToken

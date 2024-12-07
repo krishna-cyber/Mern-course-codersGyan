@@ -1,22 +1,20 @@
-import app from "../../app";
-
 import request from "supertest";
 import {
   closeDatabaseConnection,
   connectToDatabase,
   isJWT,
 } from "../utils/testUtils";
-import { ROLES } from "../../constants/constants";
-import { User } from "../../entity/User";
+import { ROLES } from "../../src/constants/constants";
+import { User } from "../../src/entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { access } from "fs";
-import { RefreshToken } from "../../entity/RefreshToken";
+import { RefreshToken } from "../../src/entity/RefreshToken";
+import app from "../../src/app";
 dotenv.config({
   path: ".env.test.local",
 });
 
-describe.skip("POST /auth/register", () => {
+describe("POST /auth/register", () => {
   //get connection from the data source
   //before all test cases this function will rul
   beforeAll(async () => {

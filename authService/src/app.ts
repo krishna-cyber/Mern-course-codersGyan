@@ -44,9 +44,10 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
     errors: [
       {
         type: err.name,
-        message: err.message,
-        path: "",
-        location: "",
+        value: err.value || "",
+        msg: err.message,
+        path: err.path || "",
+        location: err.location || "",
       },
     ],
   });

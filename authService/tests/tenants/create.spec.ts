@@ -1,5 +1,5 @@
-import app from "../../app";
-import { Tenants } from "../../entity/Tenants";
+import app from "../../src/app";
+import { Tenants } from "../../src/entity/Tenants";
 import request from "supertest";
 import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
 import mongoose from "mongoose";

@@ -1,9 +1,9 @@
-import app from "../../app";
+import app from "../../src/app";
 
 import request from "supertest";
 import { closeDatabaseConnection, connectToDatabase } from "../utils/testUtils";
-import { ROLES } from "../../constants/constants";
-import { User } from "../../entity/User";
+import { ROLES } from "../../src/constants/constants";
+import { User } from "../../src/entity/User";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import createJWKSMock from "mock-jwks";
@@ -58,7 +58,7 @@ describe("GET /auth/self", () => {
       expect(response.statusCode).toBe(200);
     });
 
-    it.skip("should return user data", async () => {
+    it("should return user data", async () => {
       //register a user
       const userData = {
         email: "tiwarikrishna54321@gmail.com",
